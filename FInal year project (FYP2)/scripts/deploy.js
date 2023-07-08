@@ -1,20 +1,23 @@
-const { ethers } = require("hardhat");
 const hre = require("hardhat");
 
 async function main() {
-  const [deployer] = await hre.ethers.getSigners();
-  console.log("Deploying contracts with the account:", deployer.address);
+  const Upload = await hre.ethers.getContractFactory("Upload");
+  const upload = await Upload.deploy();
+//await upload.deployed();
+await upload.waitForDeployment();
+console.log(
+  `Lock with ETH and unlock timestamp deployed to ${upload.target}`
+);
 
-  const ContractFactory = await hre.ethers.getContractFactory("NFT");
-  const contract = await ContractFactory.deploy();
-  await contract.deployed();
-
-  console.log("Contract deployed to:", contract.address);
+const NFT = await hre.ethers.getContractFactory("NFT");
+const nft = await NFT.deploy();
+//await upload.deployed();
+await upload.waitForDeployment();
+console.log(
+`Lock with ETH and unlock timestamp deployed to ${nft.target}`
+);
 }
-
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
